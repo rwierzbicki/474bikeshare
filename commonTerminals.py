@@ -1,5 +1,8 @@
 import csv
-
+# from matplotlib import mpl,pyplot
+# import matplotlib
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 
@@ -20,4 +23,9 @@ with open("201608_trip_data.csv") as csvfile:
     for i in range(1,100):
         print(i)
         print(tripcount[i])
+        # print max(tripcount[i]) #max 3500
 
+# image = np.random.rand(30, 30)
+plt.imshow(tripcount, cmap=plt.cm.gray)
+plt.colorbar()
+plt.show()
