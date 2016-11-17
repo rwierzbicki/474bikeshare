@@ -1,10 +1,7 @@
-
-import sys
-
-import csv
-
 import matplotlib.pyplot as plt
 import numpy as np
+import sys
+import csv
 
 
 print(sys.version)
@@ -27,6 +24,13 @@ def tripcounter(datafile):
             print(i)
             print(tripcount[i])
 
+
+    for i in range(1,100):
+        print(i)
+        print(tripcount[i])
+        # print max(tripcount[i]) #max 3500
+
+    # image = np.random.rand(30, 30)
     plt.imshow(tripcount, cmap=plt.cm.gray)
     plt.colorbar()
     plt.show()
