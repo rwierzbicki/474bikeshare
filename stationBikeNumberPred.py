@@ -87,3 +87,8 @@ clf.fit(x_train, yBike_train)
 x_test = [[1,9,4],[4,6,4]]
 MultinomialNB(alpha=1.0, class_prior=None, fit_prior=True)
 print(clf.predict(x_test))
+clf2 = MultinomialNB()
+clf.fit(x_train, yDock_train)
+x_test = [[1,9,4],[4,6,4]]
+MultinomialNB(alpha=1.0, class_prior=None, fit_prior=True)
+print(clf.predict(x_test))
