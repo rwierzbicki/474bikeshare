@@ -12,49 +12,67 @@ emptytime = [[0 for i in range(0, 13, 1)] for j in range(0, 100, 1)]
 
 start_time = time.time()
 filename = "201608_status_data.csv"
+weatherfilename = "201608_weather_data.csv"
 
 row_count = 589079 # int(35517186), only check once an hour
-x_train = [[0,0,0,0] for j in range(row_count)] # month, day of week, hour, station #
+x_train = [[0,0,0,0,0,0] for j in range(row_count)] # month, day of week, hour, station #, mean temp, rain? 0:1
 yBike_train = [0 for j in range(row_count)] # bikes avail
 yDock_train = [0 for j in range(row_count)] # docks avail
-def timeWithNumberOfBikes(datafile, numBikes=3):
+def timeWithNumberOfBikes(datafile, weatherfile):
 
     with open(datafile) as csvfile:
-        testreader = csv.reader(csvfile)
-        print ("Starting")
-        print(next(testreader))
-        
-        count = 0
-        print ("loop")
-        for row in testreader:
-            mins = int(row[3].split('/')[2].split(' ')[1].split(':')[1])
-            if(mins==0):
-                count+=1
-                stationNumber = int(row[0])
-                month = int(row[3][:9].split('/')[0])
-                day = int(row[3][:9].split('/')[1])
-                year = int(row[3].split('/')[2].split(' ')[0])
-                hour = int(row[3].split('/')[2].split(' ')[1].split(':')[0])
+        with open(weatherfile) as csvWeather:
+            weatherreader = csv.reader(csvWeather)
+            testreader = csv.reader(csvfile)
+            print ("Starting")
+            print(next(testreader))
+            print(next(weatherreader))
+            weatherCount =0
+            count = 0
+            print ("loop")
+            lastDay = day = 0
+            weatherData = next(weatherreader)
+            for row in testreader:
                 mins = int(row[3].split('/')[2].split(' ')[1].split(':')[1])
-                # print (month, day, year, hour, mins)
+                if(mins==0):
+                    
+                    count+=1
+                    stationNumber = int(row[0])
+                    month = int(row[3][:9].split('/')[0])
+                    day = int(row[3][:9].split('/')[1])
+                    year = int(row[3].split('/')[2].split(' ')[0])
+                    hour = int(row[3].split('/')[2].split(' ')[1].split(':')[0])
+                    mins = int(row[3].split('/')[2].split(' ')[1].split(':')[1])
+                    # print (month, day, year, hour, mins)
 
-                bikesAvail = int(row[1])
-                docksAvail = int(row[2])
-                x_train[count][0] = month
-                x_train[count][1] = weekDay(year,month,day)
-                x_train[count][2] = hour
-                x_train[count][3] = stationNumber
+                    bikesAvail = int(row[1])
+                    docksAvail = int(row[2])
+                    x_train[count][0] = month
+                    x_train[count][1] = weekDay(year,month,day)
+                    x_train[count][2] = hour
+                    x_train[count][3] = stationNumber
+                    x_train[count][4] = int(weatherData[2])
+                    if(weatherData[21]=='Rain'):
+                        x_train[count][5] = 1
+                    else:
+                        x_train[count][5] = 0
+                    # print(lastDay,day)
+                    
+                    if lastDay != day and weatherCount<1829: #and count>1
+                        print(weatherData[0], month, day)
+                        weatherData = next(weatherreader)
+                        weatherCount+=1 
+                    lastDay = day
+                    yBike_train[count] = bikesAvail
+                    yDock_train[count] = docksAvail
+                    
+                    if count%100000==0:
+                            print(count)
 
-                yBike_train[count] = bikesAvail
-                yDock_train[count] = docksAvail
 
-                if count%100000==0:
-                        print(count)
-
-
-    end = time.time()
-    print("time taken ", (end-start_time))
-    print("final data count ", count)
+        end = time.time()
+        print("time taken ", (end-start_time))
+        print("final data count ", count)
 
 def weekDay(year, month, day):
     offset = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]
@@ -103,7 +121,7 @@ def actualAnswer(datafile,testDataArray):
                             break
 
 
-timeWithNumberOfBikes(filename)
+timeWithNumberOfBikes(filename,weatherfilename)
 
 
 
@@ -116,30 +134,30 @@ algs = [
     Perceptron(), 
     LogisticRegression(), 
 ]
-# month, day of week, hour, station #
-x_test = [[7,1,9,4],
-    [7,4,18,4],
-    [7,5,17,13],
-    [7,3,1,1],
-    [7,6,20,52],
-    [7,7,12,62],
-    [1,1,16,91],
-    [4,1,16,91],
-    [7,1,16,91],
-    [10,1,16,91],
-    [7,2,10,16]
+# month, day of week, hour, station #, mean temp, rain?
+x_test = [[7,1,9,4,60,0],
+    [7,4,18,4,50,1],
+    [7,5,17,13,60,1],
+    [7,3,1,1,70,0],
+    [7,6,20,52,70,1],
+    [7,7,12,62,60,0],
+    [1,1,16,91,50,0],
+    [4,1,16,91,60,1],
+    [7,1,16,91,65,0],
+    [10,1,16,91,65,1],
+    [7,2,10,16,65,0]
 ]
-x2_test = [[7,1,9,4],
-    [7,4,18,4],
-    [7,5,17,13],
-    [7,3,1,1],
-    [7,6,20,52],
-    [7,7,12,62],
-    [1,1,16,91],
-    [4,1,16,91],
-    [7,1,16,91],
-    [10,1,16,91],
-    [7,2,10,16]
+x2_test = [[7,1,9,4,60,0],
+    [7,4,18,4,50,1],
+    [7,5,17,13,60,1],
+    [7,3,1,1,70,0],
+    [7,6,20,52,70,1],
+    [7,7,12,62,60,0],
+    [1,1,16,91,50,0],
+    [4,1,16,91,60,1],
+    [7,1,16,91,65,0],
+    [10,1,16,91,65,1],
+    [7,2,10,16,65,0]
 ]
 # filename2 = "201608_status_data.csv"
 # actualAnswer(filename2,x_test)
