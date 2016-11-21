@@ -10,7 +10,7 @@ emptytime = [[0 for i in range(0, 13, 1)] for j in range(0, 100, 1)]
 start_time = time.time()
 filename = "201608_status_data.csv"
 
-row_count = 589079 # int(35517186)
+row_count = 589079 # int(35517186), only check once an hour
 x_train = [[0,0,0] for j in range(row_count)] # day of week, hour, station #
 yBike_train = [0 for j in range(row_count)] # bikes avail
 yDock_train = [0 for j in range(row_count)] # docks avail
@@ -20,18 +20,13 @@ def timeWithNumberOfBikes(datafile, numBikes=3):
         testreader = csv.reader(csvfile)
         print ("Starting")
         print(next(testreader))
-        # row_count = sum(1 for row in testreader)
-        # print ("Counted", row_count)
         
         count = 0
         print ("loop")
         for row in testreader:
-            # print ("lol")
-            # print (row[0])
             mins = int(row[3].split('/')[2].split(' ')[1].split(':')[1])
             if(mins==0):
                 count+=1
-                # print(count)
                 stationNumber = int(row[0])
                 month = int(row[3][:9].split('/')[0])
                 day = int(row[3][:9].split('/')[1])
@@ -49,17 +44,9 @@ def timeWithNumberOfBikes(datafile, numBikes=3):
                 yBike_train[count] = bikesAvail
                 yDock_train[count] = docksAvail
 
-                # if bikesAvail<=numBikes:
-                #     emptytime[stop][month] +=1
                 if count%100000==0:
                         print(count)
-                # print(isinstance(int(row[1]), int ))
 
-    # stopid =0
-    # for row in emptytime:
-    #     print("stopID is ", stopid)
-    #     stopid += 1
-    #     print(row)
 
     end = time.time()
     print("time taken ", (end-start_time))
@@ -74,7 +61,6 @@ def weekDay(year, month, day):
               'Thursday',
               'Friday',
               'Saturday']
-    # week = [1,2,3,4,5,6,7]
     afterFeb = 1
     if month > 2: afterFeb = 0
     aux = year - 1700 - afterFeb
@@ -88,12 +74,12 @@ def weekDay(year, month, day):
     dayOfWeek += offset[month - 1] + (day - 1)
     dayOfWeek %= 7
     return dayOfWeek #, week[dayOfWeek]
-# x_test = [[1,9,4],[4,6,4]]
-# print (x_test[0])
+
 timeWithNumberOfBikes(filename)
 
 clf = MultinomialNB()
 clf.fit(x_train, yBike_train)
+# day of week, hour, station #
 x_test = [[1,9,4],
     [4,18,4],
     [5,17,13],
@@ -104,12 +90,13 @@ x_test = [[1,9,4],
     [2,10,16]
 ]
 
-# print (x_train[0:2][0])
-# print (x_test[0])
+
 MultinomialNB(alpha=1.0, class_prior=None, fit_prior=True)
+print("Number of bikes available: ")
 print(clf.predict(x_test))
 clf2 = MultinomialNB()
 clf2.fit(x_train, yDock_train)
+# day of week, hour, station #
 x2_test = [[1,9,4],
     [4,18,4],
     [5,17,13],
@@ -120,4 +107,5 @@ x2_test = [[1,9,4],
     [2,10,16]
 ]
 MultinomialNB(alpha=1.0, class_prior=None, fit_prior=True)
+print("Number of docks available: ")
 print(clf2.predict(x2_test))
