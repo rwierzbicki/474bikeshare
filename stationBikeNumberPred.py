@@ -4,8 +4,10 @@ import time
 import numpy as np
 from sklearn.naive_bayes import GaussianNB, MultinomialNB, BernoulliNB
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.linear_model import Perceptron, LogisticRegression, LinearRegression
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import Perceptron, LinearRegression
 from sklearn import datasets
+from sklearn.neural_network import MLPClassifier
 # from sklearn.cross_validation import train_test_split
 
 emptytime = [[0 for i in range(0, 13, 1)] for j in range(0, 100, 1)]
@@ -253,7 +255,8 @@ algs = [
     BernoulliNB(), 
     Perceptron(), 
     LinearRegression(),
-    # LogisticRegression(), 
+    RandomForestClassifier(),
+    # MLPClassifier(), # run this if you can, my comp sucks
 ]
 
 for alg in algs:

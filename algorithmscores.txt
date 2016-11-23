@@ -1,0 +1,35 @@
+Number of bikes available: 
+GaussianNB 0.0778527621424
+Number of docks available: 
+GaussianNB 0.0941397590677
+
+Number of bikes available: 
+DecisionTreeClassifier 0.0886780158286
+Number of docks available: 
+DecisionTreeClassifier 0.0892543148754
+
+Number of bikes available: 
+MultinomialNB 0.0826890899387
+Number of docks available: 
+MultinomialNB 0.0767852991352
+
+Number of bikes available: 
+BernoulliNB 0.106048847893
+Number of docks available: 
+BernoulliNB 0.0942298057938
+
+Number of bikes available: 
+Perceptron 0.106595677102
+Number of docks available: 
+Perceptron 0.0968837283929
+
+Number of bikes available: 
+LinearRegression -0.00585496113659
+Number of docks available: 
+LinearRegression 0.0119355205044
+
+Number of bikes available: 
+RandomForestClassifier 0.0950729705924
+Number of docks available: 
+RandomForestClassifier 0.0960864055639
+
