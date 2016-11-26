@@ -12,6 +12,7 @@ from sklearn.neural_network import MLPClassifier
 emptytime = [[0 for i in range(0, 13, 1)] for j in range(0, 100, 1)]
 
 start_time = time.time()
+bikeThreshold = 6
 filename = "201608_status_data.csv"
 weatherfilename = "201608_weather_data.csv"
 
@@ -69,8 +70,16 @@ def timeWithNumberOfBikes(datafile, weatherfile):
                         weatherData = next(weatherreader)
                         weatherCount+=1 
                     lastDay = day
-                    yBike_train[count] = bikesAvail
-                    yDock_train[count] = docksAvail
+                    if(bikesAvail<bikeThreshold):
+                        yBike_train[count] = 0
+                    else:
+                        yBike_train[count] = 1
+                    if(docksAvail<bikeThreshold):
+                        yDock_train[count] = 0
+                    else:
+                        yDock_train[count] = 1
+                    # yBike_train[count] = bikesAvail
+                    # yDock_train[count] = docksAvail
                     
                     if count%100000==0:
                             print(count)
@@ -128,8 +137,16 @@ def getTestYear3(datafile, weatherfile):
                         weatherData = next(weatherreader)
                         weatherCount+=1 
                     lastDay = day
-                    yBike_test[count] = bikesAvail
-                    yDock_test[count] = docksAvail
+                    if(bikesAvail<bikeThreshold):
+                        yBike_test[count] = 0
+                    else:
+                        yBike_test[count] = 1
+                    if(docksAvail<bikeThreshold):
+                        yDock_test[count] = 0
+                    else:
+                        yDock_test[count] = 1
+                    # yBike_test[count] = bikesAvail
+                    # yDock_test[count] = docksAvail
                     
                     if count%100000==0:
                             print(count)
@@ -186,8 +203,16 @@ def getTestYear2(datafile, weatherfile):
                             weatherData = next(weatherreader)
                         weatherCount+=1 
                     lastDay = day
-                    yBike_test[count] = bikesAvail
-                    yDock_test[count] = docksAvail
+                    if(bikesAvail<bikeThreshold):
+                        yBike_test[count] = 0
+                    else:
+                        yBike_test[count] = 1
+                    if(docksAvail<bikeThreshold):
+                        yDock_test[count] = 0
+                    else:
+                        yDock_test[count] = 1
+                    # yBike_test[count] = bikesAvail
+                    # yDock_test[count] = docksAvail
                     
                     if count%100000==0:
                             print(count)
@@ -253,7 +278,7 @@ algs = [
     MultinomialNB(),
     BernoulliNB(), 
     Perceptron(), 
-    LinearRegression(),
+    # LinearRegression(),
     RandomForestClassifier(),
     # MLPClassifier(), # run this if you can, my comp sucks
 ]
