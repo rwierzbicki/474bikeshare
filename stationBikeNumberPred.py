@@ -13,8 +13,7 @@ from sklearn.neural_network import MLPClassifier
 emptytime = [[0 for i in range(0, 13, 1)] for j in range(0, 100, 1)]
 
 start_time = time.time()
-filename = "201608_status_data.csv"
-weatherfilename = "201608_weather_data.csv"
+
 
 row_count = 589079 # int(35517186), only check once an hour
 row_count2 = 610794 # 36647623
@@ -25,8 +24,72 @@ x_test = [[0,0,0,0,0,0] for j in range(row_count2)] # month, day of week, hour, 
 yBike_test = [0 for j in range(row_count2)] # bikes avail
 yDock_test = [0 for j in range(row_count2)] # docks avail
 
-def timeWithNumberOfBikes(datafile, weatherfile):
+def timeWithNumberOfBikes2(datafile, weatherfile):
+    x_train = [[0,0,0,0,0,0] for j in range(row_count2)] # month, day of week, hour, station #, mean temp, rain? 0:1
+    yBike_train = [0 for j in range(row_count2)] # bikes avail
+    yDock_train = [0 for j in range(row_count2)] # docks avail
+    with open(datafile) as csvfile:
+        with open(weatherfile) as csvWeather:
+            weatherreader = csv.reader(csvWeather)
+            testreader = csv.reader(csvfile)
+            print ("Starting")
+            print(next(testreader))
+            print(next(weatherreader))
+            weatherCount =0
+            count = 0
+            print ("loop")
+            lastDay = day = 0
+            weatherData = next(weatherreader)
+            for row in testreader:
+                mins = int(row[3].split('-')[2].split(' ')[1].split(':')[1])
+                if(mins==0):
+                    count+=1
+                    stationNumber = int(row[0])
+                    year = int(row[3][:9].split('-')[0])
+                    month = int(row[3][:9].split('-')[1])
+                    day = int(row[3].split('-')[2].split(' ')[0])
+                    hour = int(row[3].split('-')[2].split(' ')[1].split(':')[0])
+                    mins = int(row[3].split('-')[2].split(' ')[1].split(':')[1])
 
+                    # print (month, day, year, hour, mins)
+
+                    bikesAvail = int(row[1])
+                    docksAvail = int(row[2])
+                    x_train[count][0] = month
+                    x_train[count][1] = weekDay(year,month,day)
+                    x_train[count][2] = hour
+                    x_train[count][3] = stationNumber
+                    if(weatherData[2]==''):
+                        x_test[count][4]=60
+                    else:
+                        x_test[count][4] = int(weatherData[2])
+                    if(weatherData[21]=='Rain'):
+                        x_train[count][5] = 1
+                    else:
+                        x_train[count][5] = 0
+                    # print(lastDay,day)
+                    
+                    if lastDay != day and weatherCount<1825: #and count>1
+                        # print(weatherData[0], month, day, weatherCount)
+                        if weatherCount<1824:
+                            weatherData = next(weatherreader)
+                        weatherCount+=1 
+                    lastDay = day
+                    yBike_train[count] = bikesAvail
+                    yDock_train[count] = docksAvail
+                    
+                    if count%100000==0:
+                            print(count)
+
+
+        end = time.time()
+        print("time taken ", (end-start_time))
+        print("final data count ", count)
+
+def timeWithNumberOfBikes3(datafile, weatherfile):
+    x_train = [[0,0,0,0,0,0] for j in range(row_count)] # month, day of week, hour, station #, mean temp, rain? 0:1
+    yBike_train = [0 for j in range(row_count)] # bikes avail
+    yDock_train = [0 for j in range(row_count)] # docks avail
     with open(datafile) as csvfile:
         with open(weatherfile) as csvWeather:
             weatherreader = csv.reader(csvWeather)
@@ -168,18 +231,14 @@ def getTestYear2(datafile, weatherfile):
                     x_test[count][1] = weekDay(year,month,day)
                     x_test[count][2] = hour
                     x_test[count][3] = stationNumber
-                    # print ("wd3:")
-                    # print(weatherData[2])
                     if(weatherData[2]==''):
-                        x_test[count][4]=0
+                        x_test[count][4]=60
                     else:
                         x_test[count][4] = int(weatherData[2])
-                    # x_test[count][4] = int(weatherData[2])
                     if(weatherData[21]=='Rain'):
                         x_test[count][5] = 1
                     else:
                         x_test[count][5] = 0
-                    # print(lastDay,day)
                     
                     if lastDay != day and weatherCount<1825: #and count>1
                         # print(weatherData[0], month, day, weatherCount)
@@ -240,11 +299,12 @@ def actualAnswer(datafile,testDataArray):
                             print(x,bikesAvail,docksAvail)
                             break
 
-
-timeWithNumberOfBikes(filename,weatherfilename)
-testfilename = "201508_status_data.csv"
-testweatherfilename = "201508_weather_data.csv"
-getTestYear2(testfilename,testweatherfilename)
+filename = "201508_status_data.csv"
+weatherfilename = "201508_weather_data.csv"
+timeWithNumberOfBikes2(filename,weatherfilename)
+testfilename = "201608_status_data.csv"
+testweatherfilename = "201608_weather_data.csv"
+getTestYear3(testfilename,testweatherfilename)
 
 
 # Load some classifiers into a list and initialize them
