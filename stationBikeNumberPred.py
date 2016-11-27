@@ -12,7 +12,7 @@ from sklearn.neural_network import MLPClassifier
 emptytime = [[0 for i in range(0, 13, 1)] for j in range(0, 100, 1)]
 
 start_time = time.time()
-bikeThreshold = 6
+bikeThreshold = 5
 filename = "201508_status_data.csv"
 weatherfilename = "201508_weather_data.csv"
 
@@ -390,6 +390,38 @@ else:
         # print(alg.predict(x2_test))
         # print ((type(alg).__name__, alg.predict(x_test)))
         print (type(alg).__name__, alg.score(x_test3, yDock_test3))
+ # 
+    for alg in algs:
+        alg = alg.fit(x_train2, yBike_train2)
+        print("Number of bikes available: ")
+        # print(alg.predict(x_test))
+        # print ((type(alg).__name__, alg.predict(x_test)))
+        # print (type(alg).__name__, alg.score(x_test3, yBike_test3))
+        zcount = 0
+        tcount = 0
+        print (type(alg).__name__,alg.predict(x_test3))
+        for x in alg.predict(x_test3):
+            if(x==0):
+                zcount+=1
+            # print (x,end=" ")
+            tcount+=1
+        print(" ",zcount,tcount)
+
+        zcount = 0
+        tcount = 0
+        alg = alg.fit(x_train2, yDock_train2)
+        print("Number of docks available: ")
+        # print(alg.predict(x2_test))
+        # print ((type(alg).__name__, alg.predict(x_test)))
+        print (type(alg).__name__,alg.predict(x_test3))
+        for x in alg.predict(x_test3):
+            if(x==0):
+                zcount+=1
+            # print (x,end=" ")
+            tcount+=1
+        print(" ",zcount,tcount)
+        # print (type(alg).__name__, alg.score(x_test3, yDock_test3))
+
 
 #  Manual testingt
 # month, day of week, hour, station #, mean temp, rain?

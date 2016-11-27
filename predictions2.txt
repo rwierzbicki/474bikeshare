@@ -1,0 +1,83 @@
+Starting
+['station_id', 'bikes_available', 'docks_available', 'time']
+['PDT', 'Max TemperatureF', 'Mean TemperatureF', 'Min TemperatureF', 'Max Dew PointF', 'MeanDew PointF', 'Min DewpointF', 'Max Humidity', ' Mean Humidity', ' Min Humidity', ' Max Sea Level PressureIn', ' Mean Sea Level PressureIn', ' Min Sea Level PressureIn', ' Max VisibilityMiles', ' Mean VisibilityMiles', ' Min VisibilityMiles', ' Max Wind SpeedMPH', ' Mean Wind SpeedMPH', ' Max Gust SpeedMPH', 'PrecipitationIn', ' CloudCover', ' Events', ' WindDirDegrees', 'Zip']
+loop
+100000
+200000
+300000
+400000
+500000
+600000
+time taken  116.0011990070343
+final data count  610722
+Starting
+['station_id', 'bikes_available', 'docks_available', 'time']
+['PDT', 'Max TemperatureF', 'Mean TemperatureF', 'Min TemperatureF', 'Max Dew PointF', 'MeanDew PointF', 'Min DewpointF', 'Max Humidity', ' Mean Humidity', ' Min Humidity', ' Max Sea Level PressureIn', ' Mean Sea Level PressureIn', ' Min Sea Level PressureIn', ' Max VisibilityMiles', ' Mean VisibilityMiles', ' Min VisibilityMiles', ' Max Wind SpeedMPH', ' Mean Wind SpeedMPH', ' Max Gust SpeedMPH', 'PrecipitationIn', ' CloudCover', ' Events', ' WindDirDegrees', 'ZIP']
+loop
+100000
+200000
+300000
+400000
+500000
+time taken  222.06339812278748
+final data count  589078
+Number of bikes available: 
+GaussianNB 0.866624001195
+Number of docks available: 
+GaussianNB 0.911446512267
+Number of bikes available: 
+DecisionTreeClassifier 0.835899768961
+Number of docks available: 
+DecisionTreeClassifier 0.907163555313
+Number of bikes available: 
+MultinomialNB 0.865680154954
+Number of docks available: 
+MultinomialNB 0.941574899122
+Number of bikes available: 
+BernoulliNB 0.8769112462
+Number of docks available: 
+BernoulliNB 0.941576596687
+Number of bikes available: 
+Perceptron 0.876909548634
+Number of docks available: 
+Perceptron 0.941576596687
+Number of bikes available: 
+RandomForestClassifier 0.862169590157
+Number of docks available: 
+RandomForestClassifier 0.925040614247
+Number of bikes available: 
+GaussianNB [0 1 1 ..., 1 1 1]
+  7669 589079
+Number of docks available: 
+GaussianNB [0 1 1 ..., 1 1 1]
+  20092 589079
+Number of bikes available: 
+DecisionTreeClassifier [0 1 1 ..., 1 1 1]
+  47732 589079
+Number of docks available: 
+DecisionTreeClassifier [0 1 1 ..., 1 1 1]
+  29345 589079
+Number of bikes available: 
+MultinomialNB [1 1 1 ..., 1 1 1]
+  7893 589079
+Number of docks available: 
+MultinomialNB [1 1 1 ..., 1 1 1]
+  0 589079
+Number of bikes available: 
+BernoulliNB [0 1 1 ..., 1 1 1]
+  1 589079
+Number of docks available: 
+BernoulliNB [0 1 1 ..., 1 1 1]
+  1 589079
+Number of bikes available: 
+Perceptron [1 1 1 ..., 1 1 1]
+  0 589079
+Number of docks available: 
+Perceptron [0 1 1 ..., 1 1 1]
+  1 589079
+Number of bikes available: 
+RandomForestClassifier [0 1 1 ..., 1 1 1]
+  25102 589079
+Number of docks available: 
+RandomForestClassifier [0 1 1 ..., 1 1 1]
+  13728 589079
