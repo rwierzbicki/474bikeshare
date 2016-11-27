@@ -12,7 +12,7 @@ from sklearn.neural_network import MLPClassifier
 emptytime = [[0 for i in range(0, 13, 1)] for j in range(0, 100, 1)]
 
 start_time = time.time()
-bikeThreshold = 5
+bikeThreshold = 4
 filename = "201508_status_data.csv"
 weatherfilename = "201508_weather_data.csv"
 
@@ -78,14 +78,20 @@ def getTrainYear3(datafile, weatherfile):
                         weatherData = next(weatherreader)
                         weatherCount+=1 
                     lastDay = day
-                    if(bikesAvail<bikeThreshold):
+                    if (bikesAvail < bikeThreshold):
                         yBike_train[count] = 0
-                    else:
+                    elif (docksAvail < bikeThreshold):
                         yBike_train[count] = 1
-                    if(docksAvail<bikeThreshold):
-                        yDock_train[count] = 0
                     else:
-                        yDock_train[count] = 1
+                        yBike_train[count] = 2
+                    # if(bikesAvail<bikeThreshold):
+                    #     yBike_train[count] = 0
+                    # else:
+                    #     yBike_train[count] = 1
+                    # if(docksAvail<bikeThreshold):
+                    #     yDock_train[count] = 0
+                    # else:
+                    #     yDock_train[count] = 1
                     # yBike_train[count] = bikesAvail
                     # yDock_train[count] = docksAvail
                     
@@ -152,12 +158,10 @@ def getTrainYear2(datafile, weatherfile):
                     lastDay = day
                     if(bikesAvail<bikeThreshold):
                         yBike_train2[count] = 0
-                    else:
+                    elif(docksAvail<bikeThreshold):
                         yBike_train2[count] = 1
-                    if(docksAvail<bikeThreshold):
-                        yDock_train2[count] = 0
                     else:
-                        yDock_train2[count] = 1
+                        yBike_train2[count] = 2
                     # yBike_train2[count] = bikesAvail
                     # yDock_train2[count] = docksAvail
                     
@@ -215,14 +219,21 @@ def getTestYear3(datafile, weatherfile):
                         weatherData = next(weatherreader)
                         weatherCount+=1 
                     lastDay = day
-                    if(bikesAvail<bikeThreshold):
+                    if (bikesAvail < bikeThreshold):
                         yBike_test3[count] = 0
-                    else:
+                    elif (docksAvail < bikeThreshold):
                         yBike_test3[count] = 1
-                    if(docksAvail<bikeThreshold):
-                        yDock_test3[count] = 0
                     else:
-                        yDock_test3[count] = 1
+                        yBike_test3[count] = 2
+
+                    # if(bikesAvail<bikeThreshold):
+                    #     yBike_test3[count] = 0
+                    # else:
+                    #     yBike_test3[count] = 1
+                    # if(docksAvail<bikeThreshold):
+                    #     yDock_test3[count] = 0
+                    # else:
+                    #     yDock_test3[count] = 1
                     # yBike_test3[count] = bikesAvail
                     # yDock_test[count] = docksAvail
                     
@@ -284,14 +295,21 @@ def getTestYear2(datafile, weatherfile):
                             weatherData = next(weatherreader)
                         weatherCount+=1 
                     lastDay = day
-                    if(bikesAvail<bikeThreshold):
+
+                    if (bikesAvail < bikeThreshold):
                         yBike_test[count] = 0
-                    else:
+                    elif (docksAvail < bikeThreshold):
                         yBike_test[count] = 1
-                    if(docksAvail<bikeThreshold):
-                        yDock_test[count] = 0
                     else:
-                        yDock_test[count] = 1
+                        yBike_test[count] = 2
+                    # if(bikesAvail<bikeThreshold):
+                    #     yBike_test[count] = 0
+                    # else:
+                    #     yBike_test[count] = 1
+                    # if(docksAvail<bikeThreshold):
+                    #     yDock_test[count] = 0
+                    # else:
+                    #     yDock_test[count] = 1
                     # yBike_test[count] = bikesAvail
                     # yDock_test[count] = docksAvail
                     
@@ -357,11 +375,11 @@ getTestYear3(testfilename,testweatherfilename)
 
 # Load some classifiers into a list and initialize them
 algs = [
-    GaussianNB(), 
+    GaussianNB(),
     DecisionTreeClassifier(),
     MultinomialNB(),
     BernoulliNB(), 
-    Perceptron(), 
+    Perceptron(),
     # LinearRegression(),
     RandomForestClassifier(),
     # MLPClassifier(), # run this if you can, my comp sucks
@@ -373,11 +391,11 @@ if(filename=="201608_status_data.csv"):
         # print(alg.predict(x_test))
         # print ((type(alg).__name__, alg.predict(x_test)))
         print (type(alg).__name__, alg.score(x_test, yBike_test))
-        alg = alg.fit(x_train, yDock_train)
-        print("Number of docks available: ")
-        # print(alg.predict(x2_test))
-        # print ((type(alg).__name__, alg.predict(x_test)))
-        print (type(alg).__name__, alg.score(x_test, yDock_test))
+        # alg = alg.fit(x_train, yDock_train)
+        # print("Number of docks available: ")
+        # # print(alg.predict(x2_test))
+        # # print ((type(alg).__name__, alg.predict(x_test)))
+        # print (type(alg).__name__, alg.score(x_test, yDock_test))
 else:
     for alg in algs:
         alg = alg.fit(x_train2, yBike_train2)
@@ -385,11 +403,11 @@ else:
         # print(alg.predict(x_test))
         # print ((type(alg).__name__, alg.predict(x_test)))
         print (type(alg).__name__, alg.score(x_test3, yBike_test3))
-        alg = alg.fit(x_train2, yDock_train2)
-        print("Number of docks available: ")
-        # print(alg.predict(x2_test))
-        # print ((type(alg).__name__, alg.predict(x_test)))
-        print (type(alg).__name__, alg.score(x_test3, yDock_test3))
+        # alg = alg.fit(x_train2, yDock_train2)
+        # print("Number of docks available: ")
+        # # print(alg.predict(x2_test))
+        # # print ((type(alg).__name__, alg.predict(x_test)))
+        # print (type(alg).__name__, alg.score(x_test3, yDock_test3))
  # 
     for alg in algs:
         alg = alg.fit(x_train2, yBike_train2)
@@ -398,28 +416,31 @@ else:
         # print ((type(alg).__name__, alg.predict(x_test)))
         # print (type(alg).__name__, alg.score(x_test3, yBike_test3))
         zcount = 0
+        ocount = 0
         tcount = 0
         print (type(alg).__name__,alg.predict(x_test3))
         for x in alg.predict(x_test3):
             if(x==0):
                 zcount+=1
+            elif(x==1):
+                ocount+=1
             # print (x,end=" ")
             tcount+=1
-        print(" ",zcount,tcount)
+        print(" ",zcount,ocount,tcount)
 
-        zcount = 0
-        tcount = 0
-        alg = alg.fit(x_train2, yDock_train2)
-        print("Number of docks available: ")
-        # print(alg.predict(x2_test))
-        # print ((type(alg).__name__, alg.predict(x_test)))
-        print (type(alg).__name__,alg.predict(x_test3))
-        for x in alg.predict(x_test3):
-            if(x==0):
-                zcount+=1
-            # print (x,end=" ")
-            tcount+=1
-        print(" ",zcount,tcount)
+        # zcount = 0
+        # tcount = 0
+        # alg = alg.fit(x_train2, yDock_train2)
+        # print("Number of docks available: ")
+        # # print(alg.predict(x2_test))
+        # # print ((type(alg).__name__, alg.predict(x_test)))
+        # print (type(alg).__name__,alg.predict(x_test3))
+        # for x in alg.predict(x_test3):
+        #     if(x==0):
+        #         zcount+=1
+        #     # print (x,end=" ")
+        #     tcount+=1
+        # print(" ",zcount,tcount)
         # print (type(alg).__name__, alg.score(x_test3, yDock_test3))
 
 
