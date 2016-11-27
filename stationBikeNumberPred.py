@@ -13,19 +13,27 @@ emptytime = [[0 for i in range(0, 13, 1)] for j in range(0, 100, 1)]
 
 start_time = time.time()
 bikeThreshold = 6
-filename = "201608_status_data.csv"
-weatherfilename = "201608_weather_data.csv"
+filename = "201508_status_data.csv"
+weatherfilename = "201508_weather_data.csv"
 
-row_count = 589079 # int(35517186), only check once an hour
+row_count3 = 589079 # int(35517186), only check once an hour
 row_count2 = 610794 # 36647623
-x_train = [[0,0,0,0,0,0] for j in range(row_count)] # month, day of week, hour, station #, mean temp, rain? 0:1
-yBike_train = [0 for j in range(row_count)] # bikes avail
-yDock_train = [0 for j in range(row_count)] # docks avail
+x_train = [[0,0,0,0,0,0] for j in range(row_count3)] # month, day of week, hour, station #, mean temp, rain? 0:1
+yBike_train = [0 for j in range(row_count3)] # bikes avail
+yDock_train = [0 for j in range(row_count3)] # docks avail
 x_test = [[0,0,0,0,0,0] for j in range(row_count2)] # month, day of week, hour, station #, mean temp, rain? 0:1
 yBike_test = [0 for j in range(row_count2)] # bikes avail
 yDock_test = [0 for j in range(row_count2)] # docks avail
 
-def timeWithNumberOfBikes(datafile, weatherfile):
+x_train2 = [[0,0,0,0,0,0] for j in range(row_count2)] # month, day of week, hour, station #, mean temp, rain? 0:1
+yBike_train2 = [0 for j in range(row_count2)] # bikes avail
+yDock_train2 = [0 for j in range(row_count2)] # docks avail
+x_test3 = [[0,0,0,0,0,0] for j in range(row_count3)] # month, day of week, hour, station #, mean temp, rain? 0:1
+yBike_test3 = [0 for j in range(row_count3)] # bikes avail
+yDock_test3 = [0 for j in range(row_count3)] # docks avail
+
+
+def getTrainYear3(datafile, weatherfile):
 
     with open(datafile) as csvfile:
         with open(weatherfile) as csvWeather:
@@ -90,6 +98,76 @@ def timeWithNumberOfBikes(datafile, weatherfile):
         print("final data count ", count)
 
 
+def getTrainYear2(datafile, weatherfile):
+    with open(datafile) as csvfile:
+        with open(weatherfile) as csvWeather:
+            weatherreader = csv.reader(csvWeather)
+            testreader = csv.reader(csvfile)
+            # row_count2 = sum(1 for row in testreader)
+            # print(row_count2)
+            print ("Starting")
+            print(next(testreader))
+            print(next(weatherreader))
+            weatherCount =0
+            count = 0
+            print ("loop")
+            lastDay = day = 0
+            weatherData = next(weatherreader)
+            for row in testreader:
+                mins = int(row[3].split('-')[2].split(' ')[1].split(':')[1])
+                if(mins==0):
+                    count+=1
+                    stationNumber = int(row[0])
+                    year = int(row[3][:9].split('-')[0])
+                    month = int(row[3][:9].split('-')[1])
+                    day = int(row[3].split('-')[2].split(' ')[0])
+                    hour = int(row[3].split('-')[2].split(' ')[1].split(':')[0])
+                    mins = int(row[3].split('-')[2].split(' ')[1].split(':')[1])
+                    # print (month, day, year, hour, mins)
+
+                    bikesAvail = int(row[1])
+                    docksAvail = int(row[2])
+                    x_train2[count][0] = month
+                    x_train2[count][1] = weekDay(year,month,day)
+                    x_train2[count][2] = hour
+                    x_train2[count][3] = stationNumber
+                    # print ("wd3:")
+                    # print(weatherData[2])
+                    if(weatherData[2]==''):
+                        x_train2[count][4]=0
+                    else:
+                        x_train2[count][4] = int(weatherData[2])
+                    # x_train2[count][4] = int(weatherData[2])
+                    if(weatherData[21]=='Rain'):
+                        x_train2[count][5] = 1
+                    else:
+                        x_train2[count][5] = 0
+                    # print(lastDay,day)
+                    
+                    if lastDay != day and weatherCount<1825: #and count>1
+                        # print(weatherData[0], month, day, weatherCount)
+                        if weatherCount<1824:
+                            weatherData = next(weatherreader)
+                        weatherCount+=1 
+                    lastDay = day
+                    if(bikesAvail<bikeThreshold):
+                        yBike_train2[count] = 0
+                    else:
+                        yBike_train2[count] = 1
+                    if(docksAvail<bikeThreshold):
+                        yDock_train2[count] = 0
+                    else:
+                        yDock_train2[count] = 1
+                    # yBike_train2[count] = bikesAvail
+                    # yDock_train2[count] = docksAvail
+                    
+                    if count%100000==0:
+                            print(count)
+        end = time.time()
+        print("time taken ", (end-start_time))
+        print("final data count ", count)
+
+
 def getTestYear3(datafile, weatherfile):
     with open(datafile) as csvfile:
         with open(weatherfile) as csvWeather:
@@ -118,18 +196,18 @@ def getTestYear3(datafile, weatherfile):
 
                     bikesAvail = int(row[1])
                     docksAvail = int(row[2])
-                    x_test[count][0] = month
-                    x_test[count][1] = weekDay(year,month,day)
-                    x_test[count][2] = hour
-                    x_test[count][3] = stationNumber
+                    x_test3[count][0] = month
+                    x_test3[count][1] = weekDay(year,month,day)
+                    x_test3[count][2] = hour
+                    x_test3[count][3] = stationNumber
                     if(weatherData[2]==''):
-                        x_test[count][4]=0
+                        x_test3[count][4]=0
                     else:
-                        x_test[count][4] = int(weatherData[2])
+                        x_test3[count][4] = int(weatherData[2])
                     if(weatherData[21]=='Rain'):
-                        x_test[count][5] = 1
+                        x_test3[count][5] = 1
                     else:
-                        x_test[count][5] = 0
+                        x_test3[count][5] = 0
                     # print(lastDay,day)
                     
                     if lastDay != day and weatherCount<1829: #and count>1
@@ -138,18 +216,21 @@ def getTestYear3(datafile, weatherfile):
                         weatherCount+=1 
                     lastDay = day
                     if(bikesAvail<bikeThreshold):
-                        yBike_test[count] = 0
+                        yBike_test3[count] = 0
                     else:
-                        yBike_test[count] = 1
+                        yBike_test3[count] = 1
                     if(docksAvail<bikeThreshold):
-                        yDock_test[count] = 0
+                        yDock_test3[count] = 0
                     else:
-                        yDock_test[count] = 1
-                    # yBike_test[count] = bikesAvail
+                        yDock_test3[count] = 1
+                    # yBike_test3[count] = bikesAvail
                     # yDock_test[count] = docksAvail
                     
                     if count%100000==0:
                             print(count)
+        end = time.time()
+        print("time taken ", (end-start_time))
+        print("final data count ", count)
 
 def getTestYear2(datafile, weatherfile):
     with open(datafile) as csvfile:
@@ -216,6 +297,9 @@ def getTestYear2(datafile, weatherfile):
                     
                     if count%100000==0:
                             print(count)
+        end = time.time()
+        print("time taken ", (end-start_time))
+        print("final data count ", count)
 
 
 def weekDay(year, month, day):
@@ -265,10 +349,10 @@ def actualAnswer(datafile,testDataArray):
                             break
 
 
-timeWithNumberOfBikes(filename,weatherfilename)
-testfilename = "201508_status_data.csv"
-testweatherfilename = "201508_weather_data.csv"
-getTestYear2(testfilename,testweatherfilename)
+getTrainYear2(filename,weatherfilename)
+testfilename = "201608_status_data.csv"
+testweatherfilename = "201608_weather_data.csv"
+getTestYear3(testfilename,testweatherfilename)
 
 
 # Load some classifiers into a list and initialize them
@@ -282,18 +366,30 @@ algs = [
     RandomForestClassifier(),
     # MLPClassifier(), # run this if you can, my comp sucks
 ]
-
-for alg in algs:
-    alg = alg.fit(x_train, yBike_train)
-    print("Number of bikes available: ")
-    # print(alg.predict(x_test))
-    # print ((type(alg).__name__, alg.predict(x_test)))
-    print (type(alg).__name__, alg.score(x_test, yBike_test))
-    alg = alg.fit(x_train, yDock_train)
-    print("Number of docks available: ")
-    # print(alg.predict(x2_test))
-    # print ((type(alg).__name__, alg.predict(x_test)))
-    print (type(alg).__name__, alg.score(x_test, yDock_test))
+if(filename=="201608_status_data.csv"):
+    for alg in algs:
+        alg = alg.fit(x_train, yBike_train)
+        print("Number of bikes available: ")
+        # print(alg.predict(x_test))
+        # print ((type(alg).__name__, alg.predict(x_test)))
+        print (type(alg).__name__, alg.score(x_test, yBike_test))
+        alg = alg.fit(x_train, yDock_train)
+        print("Number of docks available: ")
+        # print(alg.predict(x2_test))
+        # print ((type(alg).__name__, alg.predict(x_test)))
+        print (type(alg).__name__, alg.score(x_test, yDock_test))
+else:
+    for alg in algs:
+        alg = alg.fit(x_train2, yBike_train2)
+        print("Number of bikes available: ")
+        # print(alg.predict(x_test))
+        # print ((type(alg).__name__, alg.predict(x_test)))
+        print (type(alg).__name__, alg.score(x_test3, yBike_test3))
+        alg = alg.fit(x_train2, yDock_train2)
+        print("Number of docks available: ")
+        # print(alg.predict(x2_test))
+        # print ((type(alg).__name__, alg.predict(x_test)))
+        print (type(alg).__name__, alg.score(x_test3, yDock_test3))
 
 #  Manual testingt
 # month, day of week, hour, station #, mean temp, rain?
