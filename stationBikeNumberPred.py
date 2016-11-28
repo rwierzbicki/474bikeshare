@@ -12,12 +12,17 @@ from sklearn.neural_network import MLPClassifier
 emptytime = [[0 for i in range(0, 13, 1)] for j in range(0, 100, 1)]
 
 start_time = time.time()
-bikeThreshold = 4
+bikeThreshold = 5
 filename = "201508_status_data.csv"
 weatherfilename = "201508_weather_data.csv"
 
 row_count3 = 589079 # int(35517186), only check once an hour
 row_count2 = 610794 # 36647623
+
+chosenStationNumber = 11
+row_count_station_chosen2 = 8727
+row_count_station_chosen3 = 8502
+
 x_train = [[0,0,0,0,0,0] for j in range(row_count3)] # month, day of week, hour, station #, mean temp, rain? 0:1
 yBike_train = [0 for j in range(row_count3)] # bikes avail
 yDock_train = [0 for j in range(row_count3)] # docks avail
@@ -25,12 +30,12 @@ x_test = [[0,0,0,0,0,0] for j in range(row_count2)] # month, day of week, hour, 
 yBike_test = [0 for j in range(row_count2)] # bikes avail
 yDock_test = [0 for j in range(row_count2)] # docks avail
 
-x_train2 = [[0,0,0,0,0,0] for j in range(row_count2)] # month, day of week, hour, station #, mean temp, rain? 0:1
-yBike_train2 = [0 for j in range(row_count2)] # bikes avail
-yDock_train2 = [0 for j in range(row_count2)] # docks avail
-x_test3 = [[0,0,0,0,0,0] for j in range(row_count3)] # month, day of week, hour, station #, mean temp, rain? 0:1
-yBike_test3 = [0 for j in range(row_count3)] # bikes avail
-yDock_test3 = [0 for j in range(row_count3)] # docks avail
+x_train2 = [[0,0,0,0,0,0] for j in range(row_count_station_chosen2)] # month, day of week, hour, station #, mean temp, rain? 0:1
+yBike_train2 = [0 for j in range(row_count_station_chosen2)] # bikes avail
+yDock_train2 = [0 for j in range(row_count_station_chosen2)] # docks avail
+x_test3 = [[0,0,0,0,0,0] for j in range(row_count_station_chosen3)] # month, day of week, hour, station #, mean temp, rain? 0:1
+yBike_test3 = [0 for j in range(row_count_station_chosen3)] # bikes avail
+yDock_test3 = [0 for j in range(row_count_station_chosen3)] # docks avail
 
 
 def getTrainYear3(datafile, weatherfile):
@@ -48,8 +53,9 @@ def getTrainYear3(datafile, weatherfile):
             lastDay = day = 0
             weatherData = next(weatherreader)
             for row in testreader:
+                stationNumber = int(row[0])
                 mins = int(row[3].split('/')[2].split(' ')[1].split(':')[1])
-                if(mins==0):
+                if mins==0 and stationNumber==chosenStationNumber:
                     
                     count+=1
                     stationNumber = int(row[0])
@@ -120,8 +126,9 @@ def getTrainYear2(datafile, weatherfile):
             lastDay = day = 0
             weatherData = next(weatherreader)
             for row in testreader:
+                stationNumber = int(row[0])
                 mins = int(row[3].split('-')[2].split(' ')[1].split(':')[1])
-                if(mins==0):
+                if(mins==0) and stationNumber==chosenStationNumber:
                     count+=1
                     stationNumber = int(row[0])
                     year = int(row[3][:9].split('-')[0])
@@ -186,8 +193,9 @@ def getTestYear3(datafile, weatherfile):
             lastDay = day = 0
             weatherData = next(weatherreader)
             for row in testreader:
+                stationNumber = int(row[0])
                 mins = int(row[3].split('/')[2].split(' ')[1].split(':')[1])
-                if(mins==0):
+                if(mins==0) and stationNumber==chosenStationNumber:
                     
                     count+=1
                     stationNumber = int(row[0])
@@ -259,8 +267,9 @@ def getTestYear2(datafile, weatherfile):
             lastDay = day = 0
             weatherData = next(weatherreader)
             for row in testreader:
+                stationNumber = int(row[0])
                 mins = int(row[3].split('-')[2].split(' ')[1].split(':')[1])
-                if(mins==0):
+                if(mins==0) and stationNumber==chosenStationNumber:
                     count+=1
                     stationNumber = int(row[0])
                     year = int(row[3][:9].split('-')[0])
@@ -377,9 +386,9 @@ getTestYear3(testfilename,testweatherfilename)
 algs = [
     GaussianNB(),
     DecisionTreeClassifier(),
-    MultinomialNB(),
-    BernoulliNB(), 
-    Perceptron(),
+    # MultinomialNB(),
+    # BernoulliNB(),
+    # Perceptron(),
     # LinearRegression(),
     RandomForestClassifier(),
     # MLPClassifier(), # run this if you can, my comp sucks
@@ -397,6 +406,7 @@ if(filename=="201608_status_data.csv"):
         # # print ((type(alg).__name__, alg.predict(x_test)))
         # print (type(alg).__name__, alg.score(x_test, yDock_test))
 else:
+    print("Threshold: ",bikeThreshold," Station Number: ",chosenStationNumber)
     for alg in algs:
         alg = alg.fit(x_train2, yBike_train2)
         print("Number of bikes available: ")
