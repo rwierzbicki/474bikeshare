@@ -12,23 +12,23 @@ from sklearn.neural_network import MLPClassifier
 emptytime = [[0 for i in range(0, 13, 1)] for j in range(0, 100, 1)]
 
 start_time = time.time()
-bikeThreshold = 5
+bikeThreshold = 4
 filename = "201508_status_data.csv"
 weatherfilename = "201508_weather_data.csv"
 
 row_count3 = 589079 # int(35517186), only check once an hour
 row_count2 = 610794 # 36647623
 
-chosenStationNumber = 11
+chosenStationNumber = 45
 row_count_station_chosen2 = 8727
 row_count_station_chosen3 = 8502
 
-x_train = [[0,0,0,0,0,0] for j in range(row_count3)] # month, day of week, hour, station #, mean temp, rain? 0:1
-yBike_train = [0 for j in range(row_count3)] # bikes avail
-yDock_train = [0 for j in range(row_count3)] # docks avail
-x_test = [[0,0,0,0,0,0] for j in range(row_count2)] # month, day of week, hour, station #, mean temp, rain? 0:1
-yBike_test = [0 for j in range(row_count2)] # bikes avail
-yDock_test = [0 for j in range(row_count2)] # docks avail
+x_train = [[0,0,0,0,0,0] for j in range(row_count_station_chosen3)] # month, day of week, hour, station #, mean temp, rain? 0:1
+yBike_train = [0 for j in range(row_count_station_chosen3)] # bikes avail
+yDock_train = [0 for j in range(row_count_station_chosen3)] # docks avail
+x_test = [[0,0,0,0,0,0] for j in range(row_count_station_chosen2)] # month, day of week, hour, station #, mean temp, rain? 0:1
+yBike_test = [0 for j in range(row_count_station_chosen2)] # bikes avail
+yDock_test = [0 for j in range(row_count_station_chosen2)] # docks avail
 
 x_train2 = [[0,0,0,0,0,0] for j in range(row_count_station_chosen2)] # month, day of week, hour, station #, mean temp, rain? 0:1
 yBike_train2 = [0 for j in range(row_count_station_chosen2)] # bikes avail
@@ -384,7 +384,7 @@ getTestYear3(testfilename,testweatherfilename)
 
 # Load some classifiers into a list and initialize them
 algs = [
-    GaussianNB(),
+    # GaussianNB(),
     DecisionTreeClassifier(),
     # MultinomialNB(),
     # BernoulliNB(),
@@ -436,7 +436,57 @@ else:
                 ocount+=1
             # print (x,end=" ")
             tcount+=1
-        print(" ",zcount,ocount,tcount)
+        print("Predict: ",zcount,ocount,tcount)
+        zcount2 = 0
+        ocount2 = 0
+        tcount2 = 0
+        for x in yBike_test3:
+            if (x == 0):
+                zcount2 += 1
+            elif (x == 1):
+                ocount2 += 1
+                # print (x,end=" ")
+            tcount2 += 1
+        print("Actual: ", zcount2, ocount2, tcount2)
+
+        truePos = 1
+        falsePos = 1
+        falseNeg = 1
+        prediction = alg.predict(x_test3)
+        for z in range(len(prediction)):
+            x = prediction[z]
+            y = yBike_test3[z]
+            if x == 0 and y == 0:
+                truePos += 1
+            elif x==0 and y!=0:
+                falsePos += 1
+            elif x!=1 and y==0:
+                falseNeg += 1
+            # print (x,end=" ")
+            # tcount += 1
+        precision = truePos/(truePos+falsePos)
+        recall = truePos/(truePos+falseNeg)
+        print("Empty Precision: ", precision," Recall: ", recall)
+        print(truePos,falsePos,falseNeg)
+        truePos = 1
+        falsePos = 1
+        falseNeg = 1
+        prediction = alg.predict(x_test3)
+        for z in range(len(prediction)):
+            x = prediction[z]
+            y = yBike_test3[z]
+            if x == 1 and y == 1:
+                truePos += 1
+            elif x == 1 and y != 1:
+                falsePos += 1
+            elif x != 0 and y == 1:
+                falseNeg += 1
+                # print (x,end=" ")
+                # tcount += 1
+        precision = truePos / (truePos + falsePos)
+        recall = truePos / (truePos + falseNeg)
+        print("Full Precision: ", precision, " Recall: ", recall)
+        print(truePos, falsePos, falseNeg)
 
         # zcount = 0
         # tcount = 0
