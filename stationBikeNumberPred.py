@@ -19,7 +19,7 @@ weatherfilename = "201508_weather_data.csv"
 row_count3 = 589079 # int(35517186), only check once an hour
 row_count2 = 610794 # 36647623
 
-chosenStationNumber = 22
+chosenStationNumber = 45
 row_count_station_chosen2 = 8727
 row_count_station_chosen3 = 8502
 
@@ -418,90 +418,89 @@ else:
         # # print(alg.predict(x2_test))
         # # print ((type(alg).__name__, alg.predict(x_test)))
         # print (type(alg).__name__, alg.score(x_test3, yDock_test3))
- # 
+ #
+    print("0=empty, 1=full, 2=none")
     for alg in algs:
         alg = alg.fit(x_train2, yBike_train2)
-        print("Number of bikes available: ")
-        # print(alg.predict(x_test))
-        # print ((type(alg).__name__, alg.predict(x_test)))
-        # print (type(alg).__name__, alg.score(x_test3, yBike_test3))
-        zcount = 0
-        ocount = 0
-        tcount = 0
-        print (type(alg).__name__,alg.predict(x_test3))
-        for x in alg.predict(x_test3):
-            if(x==0):
-                zcount+=1
-            elif(x==1):
-                ocount+=1
-            # print (x,end=" ")
-            tcount+=1
-        print("Predict: ",zcount,ocount,tcount)
-        zcount2 = 0
-        ocount2 = 0
-        tcount2 = 0
-        for x in yBike_test3:
-            if (x == 0):
-                zcount2 += 1
-            elif (x == 1):
-                ocount2 += 1
-                # print (x,end=" ")
-            tcount2 += 1
-        print("Actual: ", zcount2, ocount2, tcount2)
+        # print("Number of bikes available: ")
+        temperature=55
+        print (type(alg).__name__)
+        print("Temperature:", temperature)
+        for hour in range(24): # month, day of week, hour, station #, mean temp, rain? 0:1
+            print(hour,alg.predict([[11,4,hour,chosenStationNumber,temperature,0]]))
+        temperature=70
+        print("Temperature:",temperature)
+        for hour in range(24):  # month, day of week, hour, station #, mean temp, rain? 0:1
+            print(hour, alg.predict([[11, 4, hour, chosenStationNumber, temperature, 0]]))
 
-        truePos = 1
-        falsePos = 1
-        falseNeg = 1
-        prediction = alg.predict(x_test3)
-        for z in range(len(prediction)):
-            x = prediction[z]
-            y = yBike_test3[z]
-            if x == 0 and y == 0:
-                truePos += 1
-            elif x==0 and y!=0:
-                falsePos += 1
-            elif x!=0 and y==0:
-                falseNeg += 1
-            # print (x,end=" ")
-            # tcount += 1
-        precision = truePos/(truePos+falsePos)
-        recall = truePos/(truePos+falseNeg)
-        print("Empty Precision: ", precision," Recall: ", recall)
-        print(truePos,falsePos,falseNeg)
-        truePos = 1
-        falsePos = 1
-        falseNeg = 1
-        prediction = alg.predict(x_test3)
-        for z in range(len(prediction)):
-            x = prediction[z]
-            y = yBike_test3[z]
-            if x == 1 and y == 1:
-                truePos += 1
-            elif x == 1 and y != 1:
-                falsePos += 1
-            elif x != 1 and y == 1:
-                falseNeg += 1
-                # print (x,end=" ")
-                # tcount += 1
-        precision = truePos / (truePos + falsePos)
-        recall = truePos / (truePos + falseNeg)
-        print("Full Precision: ", precision, " Recall: ", recall)
-        print(truePos, falsePos, falseNeg)
 
-        # zcount = 0
+
+
+
+
+            # zcount = 0
+        # ocount = 0
         # tcount = 0
-        # alg = alg.fit(x_train2, yDock_train2)
-        # print("Number of docks available: ")
-        # # print(alg.predict(x2_test))
-        # # print ((type(alg).__name__, alg.predict(x_test)))
         # print (type(alg).__name__,alg.predict(x_test3))
         # for x in alg.predict(x_test3):
         #     if(x==0):
         #         zcount+=1
+        #     elif(x==1):
+        #         ocount+=1
         #     # print (x,end=" ")
         #     tcount+=1
-        # print(" ",zcount,tcount)
-        # print (type(alg).__name__, alg.score(x_test3, yDock_test3))
+        # print("Predict: ",zcount,ocount,tcount)
+        # zcount2 = 0
+        # ocount2 = 0
+        # tcount2 = 0
+        # for x in yBike_test3:
+        #     if (x == 0):
+        #         zcount2 += 1
+        #     elif (x == 1):
+        #         ocount2 += 1
+        #         # print (x,end=" ")
+        #     tcount2 += 1
+        # print("Actual: ", zcount2, ocount2, tcount2)
+        #
+        # truePos = 1
+        # falsePos = 1
+        # falseNeg = 1
+        # prediction = alg.predict(x_test3)
+        # for z in range(len(prediction)):
+        #     x = prediction[z]
+        #     y = yBike_test3[z]
+        #     if x == 0 and y == 0:
+        #         truePos += 1
+        #     elif x==0 and y!=0:
+        #         falsePos += 1
+        #     elif x!=0 and y==0:
+        #         falseNeg += 1
+        #     # print (x,end=" ")
+        #     # tcount += 1
+        # precision = truePos/(truePos+falsePos)
+        # recall = truePos/(truePos+falseNeg)
+        # print("Empty Precision: ", precision," Recall: ", recall)
+        # print(truePos,falsePos,falseNeg)
+        # truePos = 1
+        # falsePos = 1
+        # falseNeg = 1
+        # prediction = alg.predict(x_test3)
+        # for z in range(len(prediction)):
+        #     x = prediction[z]
+        #     y = yBike_test3[z]
+        #     if x == 1 and y == 1:
+        #         truePos += 1
+        #     elif x == 1 and y != 1:
+        #         falsePos += 1
+        #     elif x != 1 and y == 1:
+        #         falseNeg += 1
+        #         # print (x,end=" ")
+        #         # tcount += 1
+        # precision = truePos / (truePos + falsePos)
+        # recall = truePos / (truePos + falseNeg)
+        # print("Full Precision: ", precision, " Recall: ", recall)
+        # print(truePos, falsePos, falseNeg)
+
 
 
 #  Manual testingt
