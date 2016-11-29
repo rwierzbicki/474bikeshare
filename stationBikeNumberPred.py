@@ -19,7 +19,7 @@ weatherfilename = "201508_weather_data.csv"
 row_count3 = 589079 # int(35517186), only check once an hour
 row_count2 = 610794 # 36647623
 
-chosenStationNumber = 45
+chosenStationNumber = 22
 row_count_station_chosen2 = 8727
 row_count_station_chosen3 = 8502
 
@@ -460,7 +460,7 @@ else:
                 truePos += 1
             elif x==0 and y!=0:
                 falsePos += 1
-            elif x!=1 and y==0:
+            elif x!=0 and y==0:
                 falseNeg += 1
             # print (x,end=" ")
             # tcount += 1
@@ -479,7 +479,7 @@ else:
                 truePos += 1
             elif x == 1 and y != 1:
                 falsePos += 1
-            elif x != 0 and y == 1:
+            elif x != 1 and y == 1:
                 falseNeg += 1
                 # print (x,end=" ")
                 # tcount += 1
